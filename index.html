@@ -2,48 +2,57 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>NeoEast 5.0 • Gestão de IMEI</title>
+<title>NeoControl 6.5 MAX • Gestão de IMEI</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 :root {
   --bg:#f6f8fa; --primary:#513863; --primary-light:#8856ad;
   --secondary:#8898aa; --success:#2dce89; --danger:#f5365c;
   --text-dark:#32325d; --shadow:0 10px 30px rgba(50,50,93,0.1),0 6px 10px rgba(0,0,0,0.08);
-  --transition:0.35s ease-in-out; --ripple-color:rgba(255,255,255,0.3);
+  --transition:0.35s ease-in-out; --info:#5e72e4;
 }
-*{box-sizing:border-box;scroll-behavior:smooth;}
+*{box-sizing:border-box; scroll-behavior:smooth;}
 body{margin:0;padding:0;font-family:"Roboto",sans-serif;background:var(--bg);color:var(--text-dark);overflow-x:hidden;}
-#loginContainer{width:92%;max-width:400px;margin:50px auto;padding:30px;background:#fff;border-radius:18px;box-shadow:var(--shadow);text-align:center;}
-#loginContainer input{width:100%;padding:12px;margin:10px 0;border-radius:12px;border:1px solid var(--secondary);font-size:15px;}
-#loginContainer button{background:var(--primary);color:#fff;border:none;padding:12px;border-radius:12px;font-size:16px;cursor:pointer;width:100%;margin-top:10px;}
-#mainContent{display:none;width:92%;max-width:980px;margin:0 auto;padding-top:30px;}
-header{text-align:center;margin-bottom:40px;}
-header h1{font-size:2.6rem;color:var(--primary);font-weight:700;letter-spacing:1px;}
+#loginContainer{width:92%;max-width:400px;margin:80px auto;padding:30px;background:#fff;border-radius:18px;box-shadow:var(--shadow);text-align:center;transition:all 0.4s;}
+#loginContainer input,#loginContainer button{width:100%;padding:14px;margin:10px 0;border-radius:12px;border:1px solid var(--secondary);font-size:15px;transition:all 0.3s;}
+#loginContainer button{background:var(--primary);color:#fff;border:none;cursor:pointer;font-weight:600;transition:0.3s;}
+#loginContainer button:hover{background:var(--primary-light);}
+#mainContent{display:none;width:95%;max-width:1100px;margin:0 auto;padding-top:30px;}
+header{text-align:center;margin-bottom:40px;position:relative;}
+header h1{font-size:2.8rem;color:var(--primary);font-weight:700;letter-spacing:1px;margin-bottom:5px;}
+#welcomeMsg{font-size:1.1rem;color:var(--secondary);}
 .tabs{display:flex;justify-content:center;gap:12px;margin-bottom:30px;flex-wrap:wrap;}
-.tabs button{background: var(--white);border:2px solid var(--primary-light);padding:12px 24px;border-radius:30px;font-weight:600;color:var(--primary);cursor:pointer;box-shadow:var(--shadow);position:relative;overflow:hidden;transition:var(--transition);}
-.tabs button.active{background: var(--primary);color:#fff;border-color:var(--primary);}
-section{display:none;background:var(--white);padding:28px;border-radius:18px;box-shadow:var(--shadow);border:1px solid var(--secondary);margin-bottom:50px;opacity:0;transform:translateX(50px);transition:all 0.5s ease;}
-section.active{display:block;opacity:1;transform:translateX(0);}
+.tabs button{background:#fff;border:2px solid var(--primary-light);padding:12px 24px;border-radius:30px;font-weight:600;color:var(--primary);cursor:pointer;transition:var(--transition);box-shadow:var(--shadow);}
+.tabs button.active{background:var(--primary);color:#fff;border-color:var(--primary);}
+section{display:none;background:#fff;padding:28px;border-radius:18px;box-shadow:var(--shadow);border:1px solid var(--secondary);margin-bottom:50px;opacity:0;transform:translateY(50px);transition:all 0.5s ease;}
+section.active{display:block;opacity:1;transform:translateY(0);}
 h2{margin-bottom:22px;font-size:1.7rem;color:var(--primary);font-weight:700;}
-input{width:100%;padding:14px;margin:10px 0;border-radius:12px;border:1px solid var(--secondary);font-size:15px;transition:all 0.3s;}
+input,button{width:100%;padding:14px;margin:10px 0;border-radius:12px;border:1px solid var(--secondary);font-size:15px;transition:all 0.3s;}
 input:focus{border-color: var(--primary);box-shadow:0 0 0 5px rgba(94,114,228,0.2);outline:none;}
-button{width:100%;padding:15px;margin:14px 0;border-radius:14px;border:none;background:var(--primary);color:#fff;font-weight:600;cursor:pointer;font-size:16px;box-shadow:var(--shadow);position:relative;overflow:hidden;transition:all 0.3s;}
-button:hover{transform:translateY(-3px);box-shadow:0px 15px 25px rgba(50,50,93,0.15),0px 6px 12px rgba(0,0,0,0.08);}
+button{background:var(--primary);color:#fff;font-weight:600;cursor:pointer;box-shadow:var(--shadow);border:none;transition:all 0.3s;}
+button:hover{transform:translateY(-2px);}
 button.venda{background: var(--success);}
 #chatBox{max-height:300px;overflow-y:auto;background:#fff;padding:15px;border-radius:12px;border:1px solid var(--secondary);margin-top:10px;box-shadow:var(--shadow);}
-.msg-vendedor span{background:#513863;color:#fff;}
-.msg-supervisor span{background:#2dce89;color:#fff;}
-.msg-administrador span{background:#000;color:#fff;}
+.msg-vendedor span{background:var(--primary);color:#fff;padding:4px 8px;border-radius:6px;display:inline-block;}
+.msg-supervisor span{background:var(--success);color:#fff;padding:4px 8px;border-radius:6px;display:inline-block;}
+.msg-administrador span{background:#000;color:#fff;padding:4px 8px;border-radius:6px;display:inline-block;}
 .msg-vendedor,.msg-supervisor,.msg-administrador{margin-bottom:8px;text-align:left;}
+.dashboard{display:flex;gap:12px;margin-bottom:30px;}
+.stat{flex:1;text-align:center;padding:20px;background:#fff;border-radius:12px;box-shadow:var(--shadow);cursor:pointer;transition:0.3s;}
+.stat:hover{transform:translateY(-4px);box-shadow:0 15px 25px rgba(0,0,0,0.1);}
+#vendasPorUsuario div{background:#fff;padding:10px;border-radius:10px;margin-bottom:5px;box-shadow:var(--shadow);}
+canvas{background:#fff;border-radius:12px;padding:10px;box-shadow:var(--shadow);}
+.popup{position:fixed;top:20px;right:20px;background:var(--success);color:#fff;padding:14px 20px;border-radius:12px;box-shadow:var(--shadow);animation:slideIn 0.5s forwards;z-index:999;}
+.popup.error{background:var(--danger);}
+@keyframes slideIn{0%{opacity:0;transform:translateX(50px);}100%{opacity:1;transform:translateX(0);}}
 </style>
 </head>
-
 <body>
+
 <div id="loginContainer">
   <h2>Login</h2>
   <input id="loginUser" placeholder="Usuário">
@@ -52,251 +61,303 @@ button.venda{background: var(--success);}
 </div>
 
 <div id="mainContent">
-<header><h1>Gestão de IMEI</h1></header>
-<div class="tabs">
-<button class="active" onclick="openTab('cadastro',this)">Cadastrar</button>
-<button onclick="openTab('consulta',this)">Consultar</button>
-<button onclick="openTab('dashboard',this)">Dashboard</button>
-<button onclick="openTab('chat',this)">Chat</button>
-</div>
+  <header>
+    <h1>Gestão de IMEI</h1>
+    <div id="welcomeMsg"></div>
+  </header>
 
-<!-- CADASTRO -->
-<section id="cadastro" class="active">
-<h2>📦 Cadastrar IMEI</h2>
-<input id="imei" placeholder="IMEI (15 dígitos)">
-<input id="marca" placeholder="Marca">
-<input id="modelo" placeholder="Modelo">
-<input id="memoria" placeholder="Memória">
-<input id="ano" placeholder="Ano">
-<input id="preco" placeholder="Preço do dispositivo (R$)">
-<button onclick="cadastrarIMEI()">Cadastrar</button>
-</section>
+  <div class="tabs">
+    <button class="active" onclick="openTab('cadastro',this)">Cadastrar</button>
+    <button onclick="openTab('consulta',this)">Consultar</button>
+    <button onclick="openTab('dashboard',this)">Dashboard</button>
+    <button onclick="openTab('chat',this)">Chat</button>
+  </div>
 
-<!-- CONSULTA -->
-<section id="consulta">
-<h2>🔍 Consultar IMEI</h2>
-<input id="consultaImei" placeholder="Digite o IMEI">
-<button onclick="consultarIMEI()">Consultar</button>
-<div id="resultado"></div>
-<button onclick="limparConsulta()">Nova Consulta</button>
-</section>
+  <section id="cadastro" class="active">
+    <h2>📦 Cadastrar IMEI</h2>
+    <input id="imei" placeholder="IMEI (15 dígitos)">
+    <input id="modelo" placeholder="Modelo">
+    <input id="memoria" placeholder="Memória">
+    <input id="preco" placeholder="Preço do dispositivo (R$)">
+    <button onclick="cadastrarIMEI()">Cadastrar</button>
+  </section>
 
-<!-- DASHBOARD -->
-<section id="dashboard">
-<h2>📊 Dashboard</h2>
-<div class="dashboard">
-  <div class="stat" onclick="filtrarEstoque()"><h3 id="estoque">0</h3><p>Em Estoque</p></div>
-  <div class="stat" onclick="filtrarVendidos()"><h3 id="vendidos">0</h3><p>Vendidos</p></div>
-  <div class="stat"><h3 id="saldoDiario">R$ 0,00</h3><p>Saldo Diário</p></div>
-</div>
-<h3 style="margin-top:30px; color:var(--primary)">📈 Crescimento de Vendas</h3>
-<canvas id="graficoVendas" style="width:100%;max-width:800px;height:300px;margin-bottom:30px;"></canvas>
-<h3 style="margin-top:30px; color:var(--primary)">📊 Cadastros por Dispositivo</h3>
-<canvas id="graficoDispositivos" style="width:100%;max-width:800px;height:300px;"></canvas>
-</section>
+  <section id="consulta">
+    <h2>🔍 Consultar IMEI</h2>
+    <input id="consultaImei" placeholder="Digite o IMEI">
+    <button onclick="consultarIMEI()">Consultar</button>
+    <div id="resultado"></div>
+    <button onclick="limparConsulta()">Nova Consulta</button>
+  </section>
 
-<!-- CHAT -->
-<section id="chat">
-<h2>💬 Chat do Sistema</h2>
-<input id="chatInput" placeholder="Digite sua mensagem">
-<button onclick="enviarMensagem()">Enviar</button>
-<button id="btnApagarChat" onclick="apagarChat()" style="display:none;background:#f5365c;">Apagar Chat (Admin)</button>
-<div id="chatBox"></div>
-</section>
-</div>
+  <section id="dashboard">
+    <h2>📊 Dashboard</h2>
+    <div class="dashboard">
+      <div class="stat" onclick="filtrarEstoque()"><h3 id="estoque">0</h3><p>Em Estoque</p></div>
+      <div class="stat" onclick="filtrarVendidos()"><h3 id="vendidos">0</h3><p>Vendidos</p></div>
+      <div class="stat"><h3 id="saldoDiario">R$ 0,00</h3><p>Saldo Diário</p></div>
+    </div>
+    <h3>👤 Vendas por Usuário</h3>
+    <div id="vendasPorUsuario"></div>
+    <h3>📈 Crescimento de Vendas</h3>
+    <canvas id="graficoVendas"></canvas>
+    <h3>📊 Cadastros por Modelo</h3>
+    <canvas id="graficoDispositivos"></canvas>
+  </section>
 
-<script>
+  <section id="chat">
+    <h2>💬 Chat do Sistema</h2>
+    <input id="chatInput" placeholder="Digite sua mensagem">
+    <button onclick="enviarMensagem()">Enviar</button>
+    <button id="btnApagarChat" onclick="apagarChat()" style="display:none;background:#f5365c;">Apagar Chat (Admin)</button>
+    <div id="chatBox"></div>
+  </section>
+  <script>
+// --- FIREBASE ---
 firebase.initializeApp({
-  apiKey:"AIzaSyArvdpIltCvs3Y-2sCfhrBbYR8i86rbMh8",
-  authDomain:"gestao-imei-loja.firebaseapp.com",
-  projectId:"gestao-imei-loja"
+  apiKey: "AIzaSyArvdpIltCvs3Y-2sCfhrBbYR8i86rbMh8",
+  authDomain: "gestao-imei-loja.firebaseapp.com",
+  projectId: "gestao-imei-loja"
 });
-const db=firebase.firestore();
+const db = firebase.firestore();
 
-/* LOGIN */
+// --- USUÁRIOS ---
 const usuarios = {
-  // Administrador
   "Alisson": { senha: "Alisson16@", nome: "Alisson Carvalho", cargo: "administrador" },
 
   // Supervisores
   "Rodrigo": { senha: "456456", nome: "Rodrigo Santos", cargo: "supervisor" },
   "Ailton": { senha: "456223", nome: "Ailton Sena", cargo: "supervisor" },
-  "fabio": { senha: "sup3", nome: "Fábio Almeida", cargo: "supervisor" },
-  "carla": { senha: "sup4", nome: "Carla Souza", cargo: "supervisor" },
 
   // Vendedores
   "Milena": { senha: "121999", nome: "Milena Sena", cargo: "vendedor" },
   "Natally": { senha: "Natally15", nome: "Natally Silva", cargo: "vendedor" },
   "Emille": { senha: "201312", nome: "Emille Beatriz", cargo: "vendedor" },
-  "camila": { senha: "camila01", nome: "Camila Rocha", cargo: "vendedor" },
-  "daniel": { senha: "daniel01", nome: "Daniel Martins", cargo: "vendedor" },
-  "eduarda": { senha: "eduarda01", nome: "Eduarda Fernandes", cargo: "vendedor" },
-  "fabiana": { senha: "fabiana01", nome: "Fabiana Teixeira", cargo: "vendedor" },
-  "gustavo": { senha: "gustavo01", nome: "Gustavo Barros", cargo: "vendedor" },
-  "henrique": { senha: "henrique01", nome: "Henrique Dias", cargo: "vendedor" },
-  "isabela": { senha: "isabela01", nome: "Isabela Nunes", cargo: "vendedor" },
-  "joao": { senha: "joao01", nome: "João Pereira", cargo: "vendedor" },
-  "karina": { senha: "karina01", nome: "Karina Melo", cargo: "vendedor" },
-  "leandro": { senha: "leandro01", nome: "Leandro Costa", cargo: "vendedor" },
-  "marcio": { senha: "marcio01", nome: "Márcio Lima", cargo: "vendedor" },
-  "natasha": { senha: "natasha01", nome: "Natasha Alves", cargo: "vendedor" },
-  "paulo": { senha: "paulo01", nome: "Paulo Rocha", cargo: "vendedor" }
+  "Vendedor3": { senha: "senha3", nome: "Nome do Vendedor 3", cargo: "vendedor" },
+  "Vendedor4": { senha: "senha4", nome: "Nome do Vendedor 4", cargo: "vendedor" },
+  "Vendedor5": { senha: "senha5", nome: "Nome do Vendedor 5", cargo: "vendedor" }
 };
-let usuarioAtual=null;
 
-function fazerLogin(){
-  const u=document.getElementById("loginUser").value.trim();
-  const s=document.getElementById("loginPass").value.trim();
-  if(!usuarios[u]||usuarios[u].senha!==s){ alert("Usuário ou senha incorretos!"); return; }
-  usuarioAtual=usuarios[u];
-  document.getElementById("loginContainer").style.display="none";
-  document.getElementById("mainContent").style.display="block";
-  if(usuarioAtual.cargo==="administrador"){document.getElementById("btnApagarChat").style.display="block";}
+// --- LOGIN ---
+let usuarioAtual = null;
+function fazerLogin() {
+  const u = document.getElementById("loginUser").value.trim();
+  const s = document.getElementById("loginPass").value.trim();
+  if (!usuarios[u] || usuarios[u].senha !== s) return popup("Usuário ou senha incorretos!", true);
+  usuarioAtual = usuarios[u];
+  document.getElementById("loginContainer").style.display = "none";
+  document.getElementById("mainContent").style.display = "block";
+  document.getElementById("welcomeMsg").innerText = `Bem-vindo, ${usuarioAtual.nome}!`;
+  if (usuarioAtual.cargo === "administrador") document.getElementById("btnApagarChat").style.display = "block";
+  carregarDashboard();
+  popup(`Olá ${usuarioAtual.nome}, você está logado!`);
 }
 
-/* TABS */
-function openTab(id,btn){
-  document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
-  document.querySelectorAll(".tabs button").forEach(b=>b.classList.remove("active"));
+// --- TABS ---
+function openTab(id, btn) {
+  document.querySelectorAll("section").forEach(s => s.classList.remove("active"));
+  document.querySelectorAll(".tabs button").forEach(b => b.classList.remove("active"));
   document.getElementById(id).classList.add("active");
   btn.classList.add("active");
 }
 
-/* CADASTRO */
-function cadastrarIMEI(){
+// --- POPUP ---
+function popup(msg, isError=false) {
+  const div = document.createElement("div");
+  div.className = "popup" + (isError ? " error" : "");
+  div.innerText = msg;
+  document.body.appendChild(div);
+  setTimeout(()=>{div.remove()}, 3000);
+}
+
+// --- CADASTRO ---
+function cadastrarIMEI() {
+  if (!usuarioAtual) return popup("Faça login primeiro!", true);
   const imei = document.getElementById("imei").value.trim();
-  const marca = document.getElementById("marca").value.trim();
   const modelo = document.getElementById("modelo").value.trim();
   const memoria = document.getElementById("memoria").value.trim();
-  const ano = document.getElementById("ano").value.trim();
-  const preco = parseFloat(document.getElementById("preco").value.trim());
+  const preco = parseFloat(document.getElementById("preco").value) || 0;
 
-  if(!/^\d{15}$/.test(imei)){ alert("IMEI inválido!"); return; }
-  if(isNaN(preco) || preco <= 0){ alert("Preço inválido!"); return; }
+  if (!/^\d{15}$/.test(imei)) return popup("IMEI inválido!", true);
+  if (!modelo || !memoria) return popup("Preencha todos os campos!", true);
 
   db.collection("imei_database").doc(imei).set({
-    imei, marca, modelo, memoria, ano, preco,
-    status:"EM ESTOQUE",
+    imei, modelo, memoria, preco,
+    status: "EM ESTOQUE",
     dataEntrada: firebase.firestore.FieldValue.serverTimestamp(),
+    usuarioCadastro: usuarioAtual.nome,
     dataVenda: null
   }).then(()=>{
-    alert("IMEI Cadastrado!");
     document.querySelectorAll("#cadastro input").forEach(i=>i.value="");
-  });
+    carregarDashboard();
+    popup(`Produto cadastrado com sucesso por ${usuarioAtual.nome}!`);
+  }).catch(()=>popup("Erro ao cadastrar produto!", true));
 }
 
-/* CONSULTA */
-function consultarIMEI(){
-  const imei=document.getElementById("consultaImei").value.trim();
-  const r=document.getElementById("resultado");
+// --- CONSULTA ---
+function consultarIMEI() {
+  const imei = document.getElementById("consultaImei").value.trim();
+  const r = document.getElementById("resultado");
+  if (!imei) return r.innerHTML="<p style='color:red'>Digite um IMEI!</p>";
   db.collection("imei_database").doc(imei).get().then(doc=>{
-    if(!doc.exists){r.innerHTML=`<p style="color:red">IMEI não encontrado</p>`; return;}
-    const d=doc.data();
-    r.innerHTML=`<div class="card">
-  <p><b>IMEI:</b> ${d.imei}</p>
-  <p><b>Marca:</b> ${d.marca}</p>
-  <p><b>Modelo:</b> ${d.modelo}</p>
-  <p><b>Preço:</b> R$ ${d.preco.toFixed(2)}</p>
-  <p><b>Status:</b> <span class="${d.status==='VENDIDO'?'status-vendido':'status-estoque'}">${d.status}</span></p>
-  ${d.status==='EM ESTOQUE'?`<button class="venda" onclick="confirmarVenda('${d.imei}')">Confirmar Venda</button>`:''}
-</div>`;
+    if (!doc.exists) return r.innerHTML="<p style='color:red'>IMEI não encontrado!</p>";
+    const d = doc.data();
+    r.innerHTML = `
+      <p><b>IMEI:</b> ${d.imei}</p>
+      <p><b>Modelo:</b> ${d.modelo}</p>
+      <p><b>Memória:</b> ${d.memoria}</p>
+      <p><b>Preço:</b> R$ ${d.preco.toFixed(2)}</p>
+      <p><b>Status:</b> ${d.status}</p>
+      ${d.status === "EM ESTOQUE" ? `<button onclick="confirmarVenda('${d.imei}')">Confirmar Venda</button>` : ""}
+    `;
   });
 }
-function limparConsulta(){document.getElementById("consultaImei").value="";document.getElementById("resultado").innerHTML="";}
-
-/* CONFIRMAR VENDA */
-function confirmarVenda(imei){
-  db.collection("imei_database").doc(imei).update({status:"VENDIDO",dataVenda:firebase.firestore.FieldValue.serverTimestamp()})
-  .then(()=>{alert("Venda Confirmada!");consultarIMEI();});
+function limparConsulta() {
+  document.getElementById("consultaImei").value = "";
+  document.getElementById("resultado").innerHTML = "";
 }
 
-/* DASHBOARD */
-db.collection("imei_database").onSnapshot(()=>{ carregarDashboard(); });
-function gerarGraficos(snap){
-  let vendasPorDia={}, cadastrosPorDispositivo={};
-  snap.forEach(doc=>{
-    const data=doc.data();
-    const dataVenda=data.dataVenda?.toDate();
-    if(dataVenda){const dia=`${dataVenda.getDate()}/${dataVenda.getMonth()+1}`; vendasPorDia[dia]=(vendasPorDia[dia]||0)+1;}
-    const device=`${data.marca} ${data.modelo}`;
-    cadastrosPorDispositivo[device]=(cadastrosPorDispositivo[device]||0)+1;
-  });
-  new Chart(document.getElementById("graficoVendas").getContext("2d"),{type:'line',data:{labels:Object.keys(vendasPorDia),datasets:[{label:'Vendas',data:Object.values(vendasPorDia),borderColor:'rgba(94,114,228,1)',backgroundColor:'rgba(94,114,228,0.2)',tension:0.4,fill:true}]},options:{responsive:true,plugins:{legend:{display:true}},scales:{y:{beginAtZero:true,precision:0}}}});
-  new Chart(document.getElementById("graficoDispositivos").getContext("2d"),{type:'bar',data:{labels:Object.keys(cadastrosPorDispositivo),datasets:[{label:'Cadastros',data:Object.values(cadastrosPorDispositivo),backgroundColor:'rgba(94,114,228,0.6)',borderColor:'rgba(94,114,228,1)',borderWidth:1}]},options:{responsive:true,plugins:{legend:{display:true}},scales:{y:{beginAtZero:true,precision:0}}}});
+// --- CONFIRMAR VENDA ---
+function confirmarVenda(imei) {
+  if (!usuarioAtual) return popup("Faça login primeiro!", true);
+  db.collection("imei_database").doc(imei).update({
+    status: "VENDIDO",
+    dataVenda: firebase.firestore.FieldValue.serverTimestamp(),
+    vendedor: usuarioAtual.nome
+  }).then(()=>{
+    popup(`Venda confirmada por ${usuarioAtual.nome}!`);
+    consultarIMEI();
+    carregarDashboard();
+  }).catch(()=>popup("Erro ao confirmar venda!", true));
 }
-function carregarDashboard(){db.collection("imei_database").get().then(snap=>{let estoque=0,vendidos=0;snap.forEach(doc=>doc.data().status==="VENDIDO"?vendidos++:estoque++);document.getElementById("estoque").innerText=estoque;document.getElementById("vendidos").innerText=vendidos;gerarGraficos(snap);});}
-function carregarDashboard(){
+
+// --- DASHBOARD ---
+function carregarDashboard() {
   db.collection("imei_database").get().then(snap=>{
-    let estoque=0,vendidos=0;
-    snap.forEach(doc=>doc.data().status==="VENDIDO"?vendidos++:estoque++);
-    document.getElementById("estoque").innerText=estoque;
-    document.getElementById("vendidos").innerText=vendidos;
-    gerarGraficos(snap);
+    let estoque=0, vendidos=0, vendasPorUsuario={};
+    snap.forEach(doc=>{
+      const d = doc.data();
+      if(d.status === "VENDIDO"){
+        vendidos++;
+        vendasPorUsuario[d.vendedor] = (vendasPorUsuario[d.vendedor]||0)+1;
+      } else estoque++;
+    });
+    document.getElementById("estoque").innerText = estoque;
+    document.getElementById("vendidos").innerText = vendidos;
 
-    // Atualiza saldo diário
+    const divVendas = document.getElementById("vendasPorUsuario");
+    divVendas.innerHTML = "";
+    for (const u in vendasPorUsuario) {
+      const d = document.createElement("div");
+      d.innerText = `${u}: ${vendasPorUsuario[u]} venda(s)`;
+      divVendas.appendChild(d);
+    }
+
+    gerarGraficos(snap);
     atualizarSaldoDiario();
   });
 }
+db.collection("imei_database").onSnapshot(()=>carregarDashboard());
 
-/* CHAT */
-function enviarMensagem(){
-  const msgInput=document.getElementById("chatInput");
-  const msg=msgInput.value.trim();
-  if(!usuarioAtual){alert("Você precisa estar logado!"); return;}
-  if(!msg){return;}
-  db.collection("chat_messages").add({usuario:usuarioAtual.nome,cargo:usuarioAtual.cargo,mensagem:msg,data:firebase.firestore.FieldValue.serverTimestamp()});
-  msgInput.value="";
+// --- SALDO DIÁRIO ---
+function atualizarSaldoDiario() {
+  const hoje = new Date();
+  const diaStr = `${hoje.getFullYear()}-${hoje.getMonth()+1}-${hoje.getDate()}`;
+  db.collection("vendas_diarias").doc(diaStr).get().then(doc=>{
+    if(!doc.exists) db.collection("vendas_diarias").doc(diaStr).set({saldo:0});
+  });
+  db.collection("imei_database").where("status","==","VENDIDO").onSnapshot(snap=>{
+    let saldo=0;
+    snap.forEach(doc=>{
+      const d = doc.data();
+      const dataVenda = d.dataVenda?.toDate();
+      if (!dataVenda) return;
+      const diaVenda = `${dataVenda.getFullYear()}-${dataVenda.getMonth()+1}-${dataVenda.getDate()}`;
+      if(diaVenda===diaStr) saldo+=d.preco||0;
+    });
+    db.collection("vendas_diarias").doc(diaStr).set({saldo});
+    document.getElementById("saldoDiario").innerText = `R$ ${saldo.toFixed(2)}`;
+  });
 }
 
-db.collection("chat_messages").orderBy("data").onSnapshot(snapshot=>{
+// --- GRÁFICOS ---
+function gerarGraficos(snap){
+  let vendasDia={}, cadastrosDisp={};
+  snap.forEach(doc=>{
+    const d = doc.data();
+    if(d.dataVenda){
+      const dia = `${d.dataVenda.toDate().getDate()}/${d.dataVenda.toDate().getMonth()+1}`;
+      vendasDia[dia] = (vendasDia[dia]||0)+1;
+    }
+    const disp = `${d.modelo} ${d.memoria}`;
+    cadastrosDisp[disp] = (cadastrosDisp[disp]||0)+1;
+  });
+
+  new Chart(document.getElementById("graficoVendas").getContext("2d"),{
+    type:'line',
+    data:{
+      labels: Object.keys(vendasDia),
+      datasets:[{
+        label:'Vendas',
+        data: Object.values(vendasDia),
+        borderColor: 'rgba(94,114,228,1)',
+        backgroundColor: 'rgba(94,114,228,0.2)',
+        fill:true,
+        tension:0.4
+      }]
+    },
+    options:{responsive:true, plugins:{legend:{display:true}}, scales:{y:{beginAtZero:true}}}
+  });
+
+  new Chart(document.getElementById("graficoDispositivos").getContext("2d"),{
+    type:'bar',
+    data:{
+      labels: Object.keys(cadastrosDisp),
+      datasets:[{
+        label:'Cadastros',
+        data: Object.values(cadastrosDisp),
+        backgroundColor:'rgba(94,114,228,0.6)',
+        borderColor:'rgba(94,114,228,1)',
+        borderWidth:1
+      }]
+    },
+    options:{responsive:true, plugins:{legend:{display:true}}, scales:{y:{beginAtZero:true}}}
+  });
+}
+
+// --- CHAT ---
+function enviarMensagem(){
+  const msg=document.getElementById("chatInput").value.trim();
+  if(!usuarioAtual||!msg) return;
+  db.collection("chat_messages").add({
+    usuario: usuarioAtual.nome,
+    cargo: usuarioAtual.cargo,
+    mensagem: msg,
+    data: firebase.firestore.FieldValue.serverTimestamp()
+  });
+  document.getElementById("chatInput").value = "";
+}
+
+db.collection("chat_messages").orderBy("data").onSnapshot(snap=>{
   const chatBox=document.getElementById("chatBox");
   chatBox.innerHTML="";
-  snapshot.forEach(doc=>{
-    const msg=doc.data();
-    const div=document.createElement("div");
-    div.className=`msg-${msg.cargo}`;
-    div.innerHTML=`<span><b>${msg.usuario}</b>: ${msg.mensagem}</span>`;
+  snap.forEach(doc=>{
+    const m = doc.data();
+    const div = document.createElement("div");
+    div.className = `msg-${m.cargo}`;
+    div.innerHTML = `<span><b>${m.usuario}</b>: ${m.mensagem}</span>`;
     chatBox.appendChild(div);
   });
   chatBox.scrollTop=chatBox.scrollHeight;
 });
 
-/* APAGAR CHAT */
 function apagarChat(){
-  if(!usuarioAtual||usuarioAtual.cargo!=="administrador"){alert("Apenas administradores podem apagar o chat!"); return;}
-  if(!confirm("Tem certeza que deseja apagar todas as mensagens?")) return;
-  db.collection("chat_messages").get().then(snapshot=>{
+  if(!usuarioAtual||usuarioAtual.cargo!=="administrador") return popup("Apenas administradores!", true);
+  if(!confirm("Apagar todas as mensagens?")) return;
+  db.collection("chat_messages").get().then(snap=>{
     const batch=db.batch();
-    snapshot.forEach(doc=>batch.delete(doc.ref));
+    snap.forEach(doc=>batch.delete(doc.ref));
     batch.commit();
-  });
-}
-function atualizarSaldoDiario(){
-  const hoje = new Date();
-  const diaString = `${hoje.getFullYear()}-${hoje.getMonth()+1}-${hoje.getDate()}`;
-
-  // Cria o documento do dia caso não exista
-  db.collection("vendas_diarias").doc(diaString).get().then(doc=>{
-    if(!doc.exists){
-      db.collection("vendas_diarias").doc(diaString).set({ saldo: 0 });
-    }
-  });
-
-  // Calcula o saldo diário
-  db.collection("imei_database").where("status","==","VENDIDO").onSnapshot(snap=>{
-    let saldo = 0;
-    snap.forEach(doc=>{
-      const d = doc.data();
-      const dataVenda = d.dataVenda?.toDate();
-      if(!dataVenda) return;
-
-      const diaVenda = `${dataVenda.getFullYear()}-${dataVenda.getMonth()+1}-${dataVenda.getDate()}`;
-      if(diaVenda === diaString){
-        saldo += d.preco || 0;
-      }
-    });
-    db.collection("vendas_diarias").doc(diaString).set({ saldo });
-    document.getElementById("saldoDiario").innerText = `R$ ${saldo.toFixed(2)}`;
   });
 }
 </script>
